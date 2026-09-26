@@ -1,4 +1,5 @@
 import { load, save } from './store.js';
+import { go } from './router.js';
 
 const form = () => document.getElementById('profile-form');
 
@@ -69,9 +70,12 @@ function onSubmit(event) {
   }
 
   profile.updatedAt = new Date().toISOString();
-  status.textContent = save('profile', profile)
-    ? 'Profile saved.'
-    : 'Could not save in this browser (storage is blocked). You can still continue.';
+  if (!save('profile', profile)) {
+    status.textContent = 'Could not save in this browser (storage is blocked). You can still continue.';
+    return;
+  }
+  status.textContent = 'Profile saved.';
+  go('diagnostic');
 }
 
 export function init() {

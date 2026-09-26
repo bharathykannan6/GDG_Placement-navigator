@@ -1,0 +1,187 @@
+[
+  {
+    "id": "apt-1",
+    "area": "Aptitude",
+    "question": "A train 150 m long passes a pole in 15 seconds. What is its speed?",
+    "options": ["30 km/h", "36 km/h", "40 km/h", "54 km/h"],
+    "answer": 1,
+    "explanation": "Speed = 150 m / 15 s = 10 m/s. Multiply by 18/5 to convert: 10 × 3.6 = 36 km/h."
+  },
+  {
+    "id": "apt-2",
+    "area": "Aptitude",
+    "question": "6 workers finish a job in 10 days. Working at the same rate, how long will 4 workers take?",
+    "options": ["20 days", "18 days", "15 days", "12 days"],
+    "answer": 2,
+    "explanation": "Total work = 6 × 10 = 60 worker-days. 60 ÷ 4 workers = 15 days."
+  },
+  {
+    "id": "apt-3",
+    "area": "Aptitude",
+    "question": "A shirt marked at ₹800 is sold at a 15% discount. What is the selling price?",
+    "options": ["₹650", "₹700", "₹720", "₹680"],
+    "answer": 3,
+    "explanation": "15% of 800 = 120. Selling price = 800 − 120 = ₹680."
+  },
+  {
+    "id": "apt-4",
+    "area": "Aptitude",
+    "question": "What comes next in the series 2, 6, 12, 20, 30, ?",
+    "options": ["42", "40", "44", "48"],
+    "answer": 0,
+    "explanation": "The terms are 1×2, 2×3, 3×4, 4×5, 5×6, so the next is 6×7 = 42. (Differences 4, 6, 8, 10, 12.)"
+  },
+  {
+    "id": "apt-5",
+    "area": "Aptitude",
+    "question": "Statements: All roses are flowers. Some flowers fade quickly. Conclusions: (I) Some roses fade quickly. (II) All roses fade quickly. Which follows?",
+    "options": ["Only I follows", "Only II follows", "Both I and II follow", "Neither I nor II follows"],
+    "answer": 3,
+    "explanation": "The flowers that fade quickly may or may not include roses, so neither conclusion is certain."
+  },
+  {
+    "id": "dsa-1",
+    "area": "DSA",
+    "question": "What is the time complexity of binary search on a sorted array of n elements?",
+    "options": ["O(n)", "O(log n)", "O(n log n)", "O(1)"],
+    "answer": 1,
+    "explanation": "Each step halves the search range, so it takes about log₂ n steps."
+  },
+  {
+    "id": "dsa-2",
+    "area": "DSA",
+    "question": "Which data structure follows Last In, First Out (LIFO)?",
+    "options": ["Queue", "Heap", "Stack", "Graph"],
+    "answer": 2,
+    "explanation": "A stack removes the most recently added element first (push/pop at the top)."
+  },
+  {
+    "id": "dsa-3",
+    "area": "DSA",
+    "question": "What is the worst-case time complexity of quicksort?",
+    "options": ["O(n log n)", "O(n)", "O(log n)", "O(n²)"],
+    "answer": 3,
+    "explanation": "With consistently bad pivots (e.g. an already sorted array and first-element pivot) quicksort degrades to O(n²). Its average case is O(n log n)."
+  },
+  {
+    "id": "dsa-4",
+    "area": "DSA",
+    "question": "Which traversal of a binary search tree visits the keys in ascending order?",
+    "options": ["In-order", "Pre-order", "Post-order", "Level-order"],
+    "answer": 0,
+    "explanation": "In-order visits left subtree, node, then right subtree, which gives sorted order in a BST."
+  },
+  {
+    "id": "dsa-5",
+    "area": "DSA",
+    "question": "With a good hash function, what is the average time to look up a key in a hash table?",
+    "options": ["O(n)", "O(log n)", "O(1)", "O(n log n)"],
+    "answer": 2,
+    "explanation": "The hash points directly to a bucket, so average lookup is constant time. The worst case (many collisions) is O(n)."
+  },
+  {
+    "id": "cs-1",
+    "area": "CS Fundamentals",
+    "question": "Which of these is NOT one of the four necessary conditions for a deadlock?",
+    "options": ["Mutual exclusion", "Hold and wait", "Circular wait", "Resources can be preempted"],
+    "answer": 3,
+    "explanation": "The condition is NO preemption. If resources can be taken away, the deadlock can be broken."
+  },
+  {
+    "id": "cs-2",
+    "area": "CS Fundamentals",
+    "question": "Which normal form removes partial dependencies, where a non-key column depends on only part of a composite primary key?",
+    "options": ["1NF", "2NF", "3NF", "BCNF"],
+    "answer": 1,
+    "explanation": "2NF requires every non-key attribute to depend on the whole primary key. 3NF then removes transitive dependencies."
+  },
+  {
+    "id": "cs-3",
+    "area": "CS Fundamentals",
+    "question": "Which transport-layer protocol provides reliable, in-order delivery with acknowledgements?",
+    "options": ["UDP", "IP", "TCP", "ICMP"],
+    "answer": 2,
+    "explanation": "TCP is connection-oriented and retransmits lost segments. UDP is connectionless; IP and ICMP work at the network layer."
+  },
+  {
+    "id": "cs-4",
+    "area": "CS Fundamentals",
+    "question": "Defining several methods with the same name but different parameter lists in one class is called:",
+    "options": ["Method overriding", "Encapsulation", "Abstraction", "Method overloading"],
+    "answer": 3,
+    "explanation": "Overloading is compile-time polymorphism within a class. Overriding is a subclass redefining a parent method."
+  },
+  {
+    "id": "cs-5",
+    "area": "CS Fundamentals",
+    "question": "In SQL, which clause filters groups after GROUP BY?",
+    "options": ["HAVING", "WHERE", "ORDER BY", "DISTINCT"],
+    "answer": 0,
+    "explanation": "WHERE filters rows before grouping; HAVING filters the groups after aggregation."
+  },
+  {
+    "id": "com-1",
+    "area": "Communication",
+    "question": "The interviewer says, \"Tell me about yourself.\" Which answer is best?",
+    "options": [
+      "I was born in Coimbatore, I have one sister, and I love cricket.",
+      "Everything is already in my resume.",
+      "A 60–90 second summary: my degree, one or two relevant projects or skills, and why this role interests me.",
+      "A detailed walk-through of every subject I have studied since school."
+    ],
+    "answer": 2,
+    "explanation": "Keep it short and relevant to the job: who you are professionally, proof of skills, and your motivation."
+  },
+  {
+    "id": "com-2",
+    "area": "Communication",
+    "question": "You don't know the answer to a technical question. What should you do?",
+    "options": [
+      "Guess confidently so I don't look weak.",
+      "Say I'm not sure, then explain how I would reason about it or find the answer.",
+      "Stay silent until they move on.",
+      "Change the topic to something I know well."
+    ],
+    "answer": 1,
+    "explanation": "Honesty plus visible problem-solving earns more credit than a confident wrong answer."
+  },
+  {
+    "id": "com-3",
+    "area": "Communication",
+    "question": "\"What is your biggest weakness?\" Which approach is best?",
+    "options": [
+      "Say I don't have any weaknesses.",
+      "Say \"I'm a perfectionist\" with no example or plan.",
+      "Name a real but manageable weakness and what I'm doing to improve it.",
+      "Name a weakness that is essential to the job, with no plan to fix it."
+    ],
+    "answer": 2,
+    "explanation": "Interviewers look for self-awareness and a concrete improvement plan."
+  },
+  {
+    "id": "com-4",
+    "area": "Communication",
+    "question": "In a group discussion, another participant keeps interrupting you. What is the best response?",
+    "options": [
+      "Raise my voice and talk over them.",
+      "Stop speaking for the rest of the discussion.",
+      "Complain about them to the moderator in front of everyone.",
+      "Let them finish, then calmly say \"I'd like to complete my point\" and make it briefly."
+    ],
+    "answer": 3,
+    "explanation": "Staying calm and assertive shows leadership; evaluators watch how you handle conflict."
+  },
+  {
+    "id": "com-5",
+    "area": "Communication",
+    "question": "Which answer to \"Why should we hire you?\" is strongest?",
+    "options": [
+      "Link two or three of my specific skills or project results to what the role needs.",
+      "Because I really need this job.",
+      "I am hard-working, sincere and a quick learner.",
+      "Because my friends already work here."
+    ],
+    "answer": 0,
+    "explanation": "Specific evidence matched to the role beats generic adjectives."
+  }
+]
