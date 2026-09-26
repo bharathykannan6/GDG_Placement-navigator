@@ -49,6 +49,15 @@ const RESPONSES = {
     nextSteps: ['Add metrics'],
   },
   question: { question: 'What is a deadlock?', tip: 'Name the four conditions.' },
+  code: {
+    verdict: 'Has bugs',
+    summary: 'Returns values instead of indices.',
+    timeComplexity: 'O(n^2)',
+    spaceComplexity: 'O(1)',
+    issues: ['Returns nums[i] instead of i'],
+    edgeCases: ['[3,3]'],
+    improvements: ['Use a hash map'],
+  },
   feedback: {
     scores: { relevance: 4, structure: 2, clarity: 3, depth: 9 },
     whatWorked: ['Clear'],
@@ -62,6 +71,7 @@ function kindOf(schema) {
   if (required.includes('weeklyPlan')) return 'plan';
   if (required.includes('matchScore')) return 'resume';
   if (required.includes('betterAnswer')) return 'feedback';
+  if (required.includes('timeComplexity')) return 'code';
   return 'question';
 }
 

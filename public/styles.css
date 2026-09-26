@@ -701,3 +701,108 @@ main:focus {
     padding: 16px;
   }
 }
+
+/* Coding practice */
+.coding-layout {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 760px) {
+  .coding-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.problem-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.problem-button {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.problem-button:hover {
+  background: var(--surface-2);
+}
+
+.problem-button[aria-current="true"] {
+  border-color: var(--brand);
+  background: var(--surface-2);
+  font-weight: 600;
+}
+
+.small {
+  font-size: 0.85rem;
+}
+
+code,
+pre,
+.code-editor {
+  font-family: ui-monospace, "Cascadia Code", Consolas, "Liberation Mono", monospace;
+  font-size: 0.92rem;
+}
+
+.code-editor {
+  min-height: 260px;
+  line-height: 1.5;
+  tab-size: 2;
+  white-space: pre;
+  overflow: auto;
+}
+
+.examples {
+  padding-left: 20px;
+}
+
+.examples code,
+.test-call {
+  word-break: break-word;
+}
+
+.test-list {
+  list-style: none;
+  padding: 0;
+}
+
+.test-item {
+  border-bottom: 1px solid var(--border);
+  padding-block: 8px;
+}
+
+.test-item p {
+  margin-bottom: 2px;
+}
+
+.test-item.not-run .review-verdict {
+  color: var(--muted);
+}
+
+.run-summary.all-pass {
+  border-color: var(--good);
+}
+
+.console {
+  background: var(--surface-2);
+  border-radius: 8px;
+  padding: 12px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}

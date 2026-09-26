@@ -22,6 +22,7 @@
         <a href="#diagnostic">Diagnostic</a>
         <a href="#standing">My Standing</a>
         <a href="#plan">Plan</a>
+        <a href="#coding">Coding</a>
         <a href="#resume">Resume</a>
         <a href="#interview">Mock Interview</a>
         <a href="#progress">Progress</a>
@@ -141,6 +142,18 @@
       <h1 id="plan-title">Your prep plan</h1>
       <div id="plan-root"></div>
     </section>
+    <section data-screen="coding" hidden aria-labelledby="coding-title">
+      <h1 id="coding-title">Coding practice</h1>
+      <p class="muted">
+        JavaScript solutions run against real test cases in your browser.
+        Python, Java and C++ solutions get a Gemini review (not executed).
+      </p>
+      <div class="coding-layout">
+        <nav class="card problem-list" id="coding-list" aria-label="Problems"></nav>
+        <div id="coding-workspace"></div>
+      </div>
+    </section>
+
     <section data-screen="resume" hidden aria-labelledby="resume-title">
       <h1 id="resume-title">Resume review</h1>
       <p class="muted">See how well your resume fits the role you want, and how to fix it.</p>

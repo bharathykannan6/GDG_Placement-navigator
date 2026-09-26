@@ -1,11 +1,12 @@
 import { h, clear } from './dom.js';
-import { clearAll } from './store.js';
+import { clearAll, load } from './store.js';
 import { go } from './router.js';
 import { bar } from './standing.js';
 import { getAttempts } from './diagnostic.js';
 import { getSavedPlan } from './plan.js';
 import { getResumeHistory } from './resume.js';
 import { getInterviews } from './interview.js';
+import { getCodingProgress } from './coding.js';
 import { attemptDeltas, interviewSummary, planCompletion, signed } from './progress-stats.js';
 
 const root = () => document.getElementById('progress-root');
@@ -70,6 +71,25 @@ function interviewCard(interviews) {
   );
 }
 
+function codingCard(progress, total) {
+  const entries = Object.values(progress);
+  if (!entries.length) {
+    return h('div', { class: 'card' },
+      h('h2', {}, 'Coding practice'),
+      h('p', { class: 'muted' }, 'No problems attempted yet.'),
+      h('a', { class: 'btn', href: '#coding' }, 'Start coding practice'));
+  }
+  const solved = entries.filter((e) => e.solved).length;
+  const attempts = entries.reduce((n, e) => n + e.attempts, 0);
+  const outOf = total ?? entries.length;
+  return h('div', { class: 'card' },
+    h('h2', {}, 'Coding practice'),
+    h('p', {}, `${solved} of ${outOf} problems solved (all tests passing) · ${attempts} test runs`),
+    bar(outOf ? Math.round((solved / outOf) * 100) : 0),
+    h('div', { class: 'btn-row' }, h('a', { class: 'btn btn-secondary', href: '#coding' }, 'Open coding practice')),
+  );
+}
+
 function resumeCard(history) {
   if (!history.length) return null;
   const latest = history[history.length - 1];
@@ -104,7 +124,12 @@ export function render() {
   const el = clear(root());
   el.append(
     diagnosticCard(getAttempts()),
-    ...[planCard(getSavedPlan()), interviewCard(getInterviews()), resumeCard(getResumeHistory())].filter(Boolean),
+    ...[
+      planCard(getSavedPlan()),
+      codingCard(getCodingProgress(), load('codingTotal', null)),
+      interviewCard(getInterviews()),
+      resumeCard(getResumeHistory()),
+    ].filter(Boolean),
     h('div', { class: 'card' },
       h('h2', {}, 'Your data'),
       h('p', { class: 'muted' }, 'Everything is stored only in this browser. Clearing it cannot be undone.'),
