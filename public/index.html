@@ -22,6 +22,7 @@
         <a href="#standing">My Standing</a>
         <a href="#plan">Plan</a>
         <a href="#resume">Resume</a>
+        <a href="#interview">Mock Interview</a>
       </div>
     </nav>
   </header>
@@ -165,6 +166,49 @@
       </form>
 
       <div id="resume-result"></div>
+    </section>
+    <section data-screen="interview" hidden aria-labelledby="interview-title">
+      <h1 id="interview-title">Mock interview</h1>
+      <p class="muted">Practise one question at a time. You get feedback on what you said and how you said it.</p>
+
+      <div class="card form-grid">
+        <div class="field">
+          <label for="iv-role">Role</label>
+          <input id="iv-role" maxlength="60" list="role-options">
+        </div>
+        <div class="field">
+          <label for="iv-round">Round</label>
+          <select id="iv-round">
+            <option value="HR">HR</option>
+            <option value="Technical">Technical</option>
+          </select>
+        </div>
+        <div class="field field-full">
+          <button class="btn" id="iv-next" type="button">Get a question</button>
+          <p class="status" id="iv-status" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div id="iv-question" class="card" hidden>
+        <span class="tag" id="iv-round-tag"></span>
+        <h2 id="iv-question-text" class="question-text" tabindex="-1"></h2>
+        <details>
+          <summary>Hint: what a good answer covers</summary>
+          <p id="iv-tip"></p>
+        </details>
+
+        <label for="iv-answer">Your answer</label>
+        <textarea id="iv-answer" maxlength="3000" aria-describedby="iv-stats"></textarea>
+        <p class="hint" id="iv-stats"></p>
+
+        <div class="btn-row">
+          <button class="btn btn-secondary" id="iv-speak" type="button" aria-pressed="false" hidden>Speak your answer</button>
+          <button class="btn" id="iv-feedback" type="button">Get feedback</button>
+        </div>
+        <p class="hint" id="iv-speech-note" hidden>Voice input uses your browser's built-in speech recognition. Your audio is not sent to our server.</p>
+      </div>
+
+      <div id="iv-result"></div>
     </section>
   </main>
 
