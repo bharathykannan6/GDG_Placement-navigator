@@ -58,6 +58,11 @@ const RESPONSES = {
     edgeCases: ['[3,3]'],
     improvements: ['Use a hash map'],
   },
+  mentor: {
+    reply: 'Focus on Communication first.
+- Practise one HR answer today',
+    followUps: ['One', 'Two', 'Three', 'Four is dropped'],
+  },
   feedback: {
     scores: { relevance: 4, structure: 2, clarity: 3, depth: 9 },
     whatWorked: ['Clear'],
@@ -72,6 +77,7 @@ function kindOf(schema) {
   if (required.includes('matchScore')) return 'resume';
   if (required.includes('betterAnswer')) return 'feedback';
   if (required.includes('timeComplexity')) return 'code';
+  if (required === 'reply,followUps') return 'mentor';
   return 'question';
 }
 

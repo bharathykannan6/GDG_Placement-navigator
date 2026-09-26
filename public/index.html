@@ -25,6 +25,7 @@
         <a href="#coding">Coding</a>
         <a href="#resume">Resume</a>
         <a href="#interview">Mock Interview</a>
+        <a href="#mentor">Mentor</a>
         <a href="#progress">Progress</a>
       </div>
     </nav>
@@ -225,6 +226,25 @@
 
       <div id="iv-result"></div>
     </section>
+    <section data-screen="mentor" hidden aria-labelledby="mentor-title">
+      <h1 id="mentor-title">AI mentor</h1>
+      <p class="muted">Ask anything about your placement preparation. The mentor sees your profile (not your name), scores, plan and practice results.</p>
+
+      <div class="card mentor-card">
+        <div id="mentor-log" class="mentor-log" role="log" aria-live="polite" aria-label="Conversation"></div>
+        <div id="mentor-suggestions"></div>
+        <form id="mentor-form" class="mentor-form">
+          <label for="mentor-input" class="visually-hidden">Your question</label>
+          <textarea id="mentor-input" rows="2" maxlength="2000" placeholder="Ask your mentor… (Enter to send, Shift+Enter for a new line)"></textarea>
+          <div class="btn-row">
+            <button class="btn" id="mentor-send" type="submit">Send</button>
+            <button class="btn btn-secondary" id="mentor-clear" type="button">Clear chat</button>
+          </div>
+          <p class="status" id="mentor-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+
     <section data-screen="progress" hidden aria-labelledby="progress-title">
       <h1 id="progress-title">Your progress</h1>
       <div id="progress-root"></div>

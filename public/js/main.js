@@ -7,6 +7,7 @@ import * as plan from './plan.js';
 import * as coding from './coding.js';
 import * as resume from './resume.js';
 import * as interview from './interview.js';
+import * as mentor from './mentor.js';
 import * as progress from './progress.js';
 
 register('home', home);
@@ -17,6 +18,7 @@ register('plan', plan);
 register('coding', coding);
 register('resume', resume);
 register('interview', interview);
+register('mentor', mentor);
 register('progress', progress);
 
 // The skip link must not change the hash (the hash selects the screen).

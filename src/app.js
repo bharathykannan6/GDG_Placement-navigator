@@ -8,6 +8,7 @@ import { planRouter } from './routes/plan.js';
 import { resumeRouter } from './routes/resume.js';
 import { interviewRouter } from './routes/interview.js';
 import { codingRouter } from './routes/coding.js';
+import { mentorRouter } from './routes/mentor.js';
 
 const publicDir = fileURLToPath(new URL('../public', import.meta.url));
 
@@ -66,6 +67,7 @@ export function createApp({ ai = aiFromEnv(), aiRequestsPerMinute = 20 } = {}) {
   app.use('/api/interview', aiLimit, interviewRouter(ai));
   app.use('/api/coding/review', aiLimit);
   app.use('/api/coding', codingRouter(ai));
+  app.use('/api/mentor', aiLimit, mentorRouter(ai));
 
   app.use('/api', (req, res) => {
     res.status(404).json({ error: 'Not found.' });
