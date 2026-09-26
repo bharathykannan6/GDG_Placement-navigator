@@ -62,6 +62,12 @@ const RESPONSES = {
     reply: 'Focus on Communication first.\n- Practise one HR answer today',
     followUps: ['One', 'Two', 'Three', 'Four is dropped'],
   },
+  report: {
+    summary: 'Relevant answers that need more structure.',
+    strengths: ['Relevant examples'],
+    focusAreas: ['Use STAR', 'Give results', 'Slow down', 'Fourth is dropped'],
+    nextSteps: ['Practise 3 HR answers'],
+  },
   feedback: {
     scores: { relevance: 4, structure: 2, clarity: 3, depth: 9 },
     whatWorked: ['Clear'],
@@ -77,6 +83,7 @@ function kindOf(schema) {
   if (required.includes('betterAnswer')) return 'feedback';
   if (required.includes('timeComplexity')) return 'code';
   if (required === 'reply,followUps') return 'mentor';
+  if (required.includes('focusAreas')) return 'report';
   return 'question';
 }
 

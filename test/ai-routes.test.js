@@ -116,3 +116,34 @@ test('AI routes are rate limited per client', async () => {
   assert.equal(limited.status, 429);
   assert.match(limited.body.error, /Too many requests/);
 });
+
+test('POST /api/interview/report computes scores and verdict in code', async () => {
+  const ai = fakeAi();
+  const item = (relevance, structure, clarity, depth, round = 'HR') => ({
+    question: 'Tell me about a challenge you faced.',
+    answer: 'In my project we missed a deadline, so I split the work and we shipped a day later.',
+    round,
+    scores: { relevance, structure, clarity, depth },
+  });
+  const res = await post(createApp({ ai }), '/api/interview/report', {
+    targetRole: 'Software Engineer',
+    items: [item(4, 3, 4, 3), item(5, 4, 4, 2, 'Technical'), item(4, 3, 4, 3), item(5, 4, 4, 2, 'Technical'), item(4, 3, 4, 3)],
+  });
+
+  assert.equal(res.status, 200);
+  assert.deepEqual(res.body.averages, { relevance: 4.4, structure: 3.4, clarity: 4, depth: 2.6 });
+  assert.equal(res.body.overall, 3.6);
+  assert.equal(res.body.verdict, 'Promising');
+  assert.equal(res.body.questionCount, 5);
+  assert.equal(res.body.focusAreas.length, 3, 'lists are capped at 3');
+  assert.match(ai.calls[0].prompt, /Question 2 \(Technical\)/);
+});
+
+test('POST /api/interview/report validates items', async () => {
+  const app = createApp({ ai: fakeAi() });
+  const good = { question: 'Why this role?', answer: 'Because I enjoy building products.', round: 'HR', scores: { relevance: 3, structure: 3, clarity: 3, depth: 3 } };
+  assert.equal((await post(app, '/api/interview/report', { items: [good, good] })).status, 400);
+  assert.equal((await post(app, '/api/interview/report', { items: Array(6).fill(good) })).status, 400);
+  assert.equal((await post(app, '/api/interview/report', { items: [good, good, { ...good, scores: { ...good.scores, depth: 6 } }] })).status, 400);
+  assert.equal((await post(app, '/api/interview/report', { items: [good, good, { ...good, round: 'Group' }] })).status, 400);
+});

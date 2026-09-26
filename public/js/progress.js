@@ -5,7 +5,7 @@ import { bar } from './standing.js';
 import { getAttempts } from './diagnostic.js';
 import { getSavedPlan } from './plan.js';
 import { getResumeHistory } from './resume.js';
-import { getInterviews } from './interview.js';
+import { getInterviews, getSessions } from './interview.js';
 import { getCodingProgress } from './coding.js';
 import { attemptDeltas, interviewSummary, planCompletion, signed } from './progress-stats.js';
 
@@ -52,10 +52,14 @@ function diagnosticCard(attempts) {
   );
 }
 
-function interviewCard(interviews) {
+function interviewCard(interviews, sessions) {
   const summary = interviewSummary(interviews);
+  const lastSession = sessions.at(-1);
   return h('div', { class: 'card' },
     h('h2', {}, 'Mock interviews'),
+    lastSession && h('p', {},
+      h('strong', {}, 'Last full interview: '),
+      `${lastSession.overall}/5 (${lastSession.verdict}), ${lastSession.round} round, ${new Date(lastSession.date).toLocaleDateString()}`),
     summary.total === 0
       ? [h('p', { class: 'muted' }, 'No answers yet.'), h('a', { class: 'btn', href: '#interview' }, 'Practise a question')]
       : [
@@ -127,7 +131,7 @@ export function render() {
     ...[
       planCard(getSavedPlan()),
       codingCard(getCodingProgress(), load('codingTotal', null)),
-      interviewCard(getInterviews()),
+      interviewCard(getInterviews(), getSessions()),
       resumeCard(getResumeHistory()),
     ].filter(Boolean),
     h('div', { class: 'card' },

@@ -193,14 +193,26 @@
           <input id="iv-role" maxlength="60" list="role-options">
         </div>
         <div class="field">
+          <label for="iv-mode">Mode</label>
+          <select id="iv-mode">
+            <option value="single">Single question practice</option>
+            <option value="session">Full interview (5 questions + report)</option>
+          </select>
+        </div>
+        <div class="field">
           <label for="iv-round">Round</label>
           <select id="iv-round">
             <option value="HR">HR</option>
             <option value="Technical">Technical</option>
+            <option value="Mixed">Mixed (HR + Technical)</option>
           </select>
         </div>
         <div class="field field-full">
-          <button class="btn" id="iv-next" type="button">Get a question</button>
+          <p class="muted" id="iv-progress" aria-live="polite"></p>
+          <div class="btn-row">
+            <button class="btn" id="iv-next" type="button">Get a question</button>
+            <button class="btn" id="iv-report" type="button" hidden>See my interview report</button>
+          </div>
           <p class="status" id="iv-status" role="status" aria-live="polite"></p>
         </div>
       </div>
