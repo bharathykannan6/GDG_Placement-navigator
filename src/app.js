@@ -3,6 +3,7 @@ import helmet from 'helmet';
 import { fileURLToPath } from 'node:url';
 import { createGemini } from './gemini.js';
 import { diagnosticRouter } from './routes/diagnostic.js';
+import { planRouter } from './routes/plan.js';
 
 const publicDir = fileURLToPath(new URL('../public', import.meta.url));
 
@@ -32,6 +33,7 @@ export function createApp({ ai = aiFromEnv() } = {}) {
   });
 
   app.use('/api/diagnostic', diagnosticRouter());
+  app.use('/api/plan', planRouter(ai));
 
   // eslint-disable-next-line no-unused-vars
   app.use((err, req, res, next) => {

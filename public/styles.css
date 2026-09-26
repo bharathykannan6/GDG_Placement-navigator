@@ -491,3 +491,72 @@ summary {
 .review-q {
   font-weight: 600;
 }
+
+/* Plan */
+.notice {
+  border-color: var(--warn);
+}
+
+.daily-habit {
+  background: var(--surface-2);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.priority-list {
+  padding-left: 20px;
+}
+
+.priority-list > li {
+  margin-bottom: 16px;
+}
+
+.priority-list h3 {
+  margin-bottom: 2px;
+}
+
+.week {
+  border-top: 1px solid var(--border);
+  padding-block: 12px 4px;
+}
+
+.week legend {
+  float: left;
+  width: 100%;
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+.check {
+  clear: both;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding-block: 6px;
+}
+
+.check input {
+  width: 20px;
+  min-height: 20px;
+  height: 20px;
+  margin-top: 2px;
+  accent-color: var(--brand);
+  flex: none;
+}
+
+.check label {
+  font-weight: 400;
+  margin: 0;
+}
+
+.check input:checked + label {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+.resource-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}

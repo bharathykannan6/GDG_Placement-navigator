@@ -104,7 +104,9 @@ export function render() {
         h('summary', {}, `Correct (${right.length})`),
         h('ol', { class: 'review-list' }, right.map(reviewItem)),
       ),
-      h('div', { class: 'btn-row' }, h('a', { class: 'btn btn-secondary', href: '#diagnostic' }, 'Retake diagnostic')),
+      h('div', { class: 'btn-row' },
+        h('a', { class: 'btn', href: '#plan' }, 'Get my prep plan'),
+        h('a', { class: 'btn btn-secondary', href: '#diagnostic' }, 'Retake diagnostic')),
     ),
   );
 }
