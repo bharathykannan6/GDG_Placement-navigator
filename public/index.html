@@ -9,6 +9,7 @@
   <script type="module" src="/js/main.js"></script>
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to main content</a>
   <header class="site-header">
     <div class="wrap header-row">
       <a class="brand" href="#home">Placement <span>Navigator</span></a>
@@ -28,14 +29,14 @@
     </nav>
   </header>
 
-  <main id="main" class="wrap">
+  <main id="main" class="wrap" tabindex="-1">
     <section data-screen="home" class="hero" aria-labelledby="home-title">
       <h1 id="home-title">Prepare for placements with a plan made for you</h1>
       <p class="lead">
         Most students don't know what to prepare, how to prepare, where they stand, or what to improve.
         Placement Navigator answers all four.
       </p>
-      <a class="btn" href="#profile">Start with your profile</a>
+      <div id="home-next"></div>
       <ol class="steps">
         <li><strong>Profile</strong> Tell us your branch, target role and time available.</li>
         <li><strong>Diagnostic</strong> A 20-question check across aptitude, DSA, CS fundamentals and communication.</li>

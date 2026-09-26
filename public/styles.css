@@ -647,3 +647,57 @@ blockquote {
   flex-wrap: wrap;
   gap: 8px 20px;
 }
+
+/* Accessibility */
+.skip-link {
+  position: absolute;
+  left: 16px;
+  top: -60px;
+  z-index: 10;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: var(--brand);
+  color: var(--brand-contrast);
+  font-weight: 700;
+}
+
+.skip-link:focus {
+  top: 12px;
+}
+
+:focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: 2px;
+}
+
+h1[tabindex="-1"]:focus,
+h2[tabindex="-1"]:focus,
+legend[tabindex="-1"]:focus,
+main:focus {
+  outline: none;
+}
+
+/* Home */
+.next-card {
+  max-width: 560px;
+  margin-top: 8px;
+}
+
+.welcome {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+@media (max-width: 480px) {
+  .btn {
+    width: 100%;
+  }
+
+  .btn-row {
+    flex-direction: column;
+  }
+
+  .card {
+    padding: 16px;
+  }
+}
