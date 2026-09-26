@@ -21,6 +21,7 @@
         <a href="#diagnostic">Diagnostic</a>
         <a href="#standing">My Standing</a>
         <a href="#plan">Plan</a>
+        <a href="#resume">Resume</a>
       </div>
     </nav>
   </header>
@@ -136,6 +137,34 @@
     <section data-screen="plan" hidden aria-labelledby="plan-title">
       <h1 id="plan-title">Your prep plan</h1>
       <div id="plan-root"></div>
+    </section>
+    <section data-screen="resume" hidden aria-labelledby="resume-title">
+      <h1 id="resume-title">Resume review</h1>
+      <p class="muted">See how well your resume fits the role you want, and how to fix it.</p>
+
+      <form id="resume-form" class="card" novalidate>
+        <div class="field">
+          <label for="resume-role">Role you are applying for</label>
+          <input id="resume-role" name="targetRole" maxlength="60" list="role-options">
+        </div>
+
+        <div class="field">
+          <label for="resume-text">Paste your resume text</label>
+          <textarea id="resume-text" name="resumeText" aria-describedby="resume-count resume-privacy"></textarea>
+          <p class="hint" id="resume-count"></p>
+          <p class="hint" id="resume-privacy">
+            Email addresses and phone numbers are removed on our server before the text is sent to the AI.
+            Leave out your home address.
+          </p>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn" id="resume-submit" type="submit">Review my resume</button>
+        </div>
+        <p class="status" id="resume-status" role="status" aria-live="polite"></p>
+      </form>
+
+      <div id="resume-result"></div>
     </section>
   </main>
 

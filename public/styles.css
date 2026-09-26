@@ -560,3 +560,44 @@ summary {
   display: grid;
   gap: 10px;
 }
+
+/* Resume review */
+.field + .field {
+  margin-top: 16px;
+}
+
+.verdict {
+  margin-top: 12px;
+  font-size: 1.05rem;
+}
+
+.tag-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 480px;
+}
+
+th,
+td {
+  text-align: left;
+  vertical-align: top;
+  padding: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+th {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
