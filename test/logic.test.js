@@ -27,6 +27,15 @@ test('generateJson turns SDK errors and bad JSON into safe AiErrors', async () =
   await assert.rejects(failing.generateJson({}), (err) => err instanceof AiError && !err.message.includes('SECRET'));
 });
 
+test('SDK errors map to messages that say what to fix', async () => {
+  const failWith = (err) => createGemini({ client: fakeClient(async () => { throw err; }) }).generateJson({});
+  const message = async (err) => { try { await failWith(err); } catch (e) { return e.message; } return null; };
+  assert.match(await message(Object.assign(new Error('API key not valid. Please pass a valid API key.'), { status: 400 })), /GEMINI_API_KEY/);
+  assert.match(await message(Object.assign(new Error('Resource exhausted'), { status: 429 })), /quota/);
+  assert.match(await message(Object.assign(new Error('models/x is not found'), { status: 404 })), /GEMINI_MODEL/);
+  assert.equal(await message(new Error('socket hang up')), 'The AI service did not respond. Please try again.');
+});
+
 test('weeksUntil counts whole weeks to the 1st of the month, at least 1', () => {
   const today = new Date(Date.UTC(2026, 8, 26)); // 26 Sep 2026
   assert.equal(weeksUntil('2026-12', today), 10); // 66 days

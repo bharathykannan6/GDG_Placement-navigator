@@ -11,6 +11,18 @@ export class AiError extends Error {
   }
 }
 
+/** Turns an SDK error into a message that says what to fix, without leaking details. */
+function explain(err) {
+  const status = err?.status;
+  const message = String(err?.message ?? '');
+  if (/api key/i.test(message) || status === 401 || status === 403) {
+    return 'The Gemini API key on the server is not valid. Check GEMINI_API_KEY.';
+  }
+  if (status === 429) return 'The AI is busy or the API quota is used up. Please wait a minute and try again.';
+  if (status === 404) return 'The Gemini model is not available. Check GEMINI_MODEL.';
+  return 'The AI service did not respond. Please try again.';
+}
+
 /**
  * Wraps the Gemini SDK so every feature gets parsed JSON back.
  * `client` can be injected for tests; otherwise a real SDK client is created.
@@ -35,7 +47,7 @@ export function createGemini({ apiKey, model = 'gemini-flash-latest', client } =
           },
         });
       } catch (err) {
-        throw new AiError('The AI service did not respond. Please try again.', { cause: err });
+        throw new AiError(explain(err), { cause: err });
       }
 
       try {

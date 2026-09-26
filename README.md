@@ -79,7 +79,8 @@ cp .env.example .env        # then paste your key from https://aistudio.google.c
 npm run dev
 ```
 
-Open http://localhost:8080. Without a key the diagnostic, dashboard and progress screens still work; AI features show "AI is not configured".
+Open http://localhost:8080. `npm start` runs the same server without auto-reload. Both commands read `.env` if it exists.
+Without a key the diagnostic, dashboard and progress screens still work; AI features show "AI is not configured".
 
 | Variable | Required | Default | Purpose |
 |---|---|---|---|
@@ -93,7 +94,7 @@ Open http://localhost:8080. Without a key the diagnostic, dashboard and progress
 npm test
 ```
 
-28 tests use Node's built-in test runner and `supertest`. They cover:
+29 tests use Node's built-in test runner and `supertest`. They cover:
 - health, headers and 404s;
 - the question bank and scoring;
 - input validation;
