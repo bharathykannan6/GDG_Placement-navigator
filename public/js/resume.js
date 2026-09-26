@@ -6,6 +6,11 @@ import { bar } from './standing.js';
 
 const MIN = 100;
 const MAX = 8000;
+const MAX_PDF_BYTES = 4 * 1024 * 1024;
+const SOURCE_NOTE = {
+  'pdf-text': 'Text was read from your PDF on our server; emails and phone numbers were removed before the AI saw it.',
+  'pdf-gemini': 'Your PDF had no selectable text (it looks scanned), so Gemini read the pages directly. The file was sent to Gemini as-is.',
+};
 let lastReview = null;
 
 const $ = (id) => document.getElementById(id);
@@ -35,6 +40,8 @@ function renderResult(review) {
       ),
       bar(review.matchScore),
       h('p', { class: 'verdict' }, review.verdict),
+      review.source && h('p', { class: 'muted' }, SOURCE_NOTE[review.source] ?? '',
+        review.truncated ? ' Only the first 8000 characters were reviewed.' : ''),
     ),
     h('div', { class: 'card' },
       list('What already works', review.strengths),
@@ -92,8 +99,52 @@ async function onSubmit(event) {
   }
 }
 
+async function onPdf() {
+  const status = $('resume-status');
+  const button = $('resume-pdf-submit');
+  const file = $('resume-pdf').files[0];
+  const targetRole = $('resume-role').value.trim();
+
+  if (!file) {
+    status.textContent = 'Choose a PDF file first.';
+    $('resume-pdf').focus();
+    return;
+  }
+  if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+    status.textContent = 'Please choose a .pdf file.';
+    return;
+  }
+  if (file.size > MAX_PDF_BYTES) {
+    status.textContent = 'The PDF is larger than 4 MB. Export a smaller file or paste the text instead.';
+    return;
+  }
+  if (targetRole.length < 2) {
+    status.textContent = 'Enter the role you are applying for.';
+    $('resume-role').focus();
+    return;
+  }
+
+  button.disabled = true;
+  status.textContent = 'Reading your PDF and reviewing it…';
+  try {
+    const pdf = file.type === 'application/pdf' ? file : new Blob([file], { type: 'application/pdf' });
+    const review = await api(`/api/resume/review-pdf?targetRole=${encodeURIComponent(targetRole)}`, { method: 'POST', file: pdf });
+    lastReview = { ...review, targetRole };
+    const history = getResumeHistory();
+    history.push({ date: new Date().toISOString(), targetRole, matchScore: review.matchScore });
+    save('resumeReviews', history.slice(-20));
+    status.textContent = 'Review ready.';
+    renderResult(lastReview);
+  } catch (err) {
+    status.textContent = err.message;
+  } finally {
+    button.disabled = false;
+  }
+}
+
 export function init() {
   $('resume-form').addEventListener('submit', onSubmit);
+  $('resume-pdf-submit').addEventListener('click', onPdf);
   $('resume-text').addEventListener('input', updateCounter);
   $('resume-text').maxLength = MAX;
 }

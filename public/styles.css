@@ -878,3 +878,14 @@ pre,
 .mentor-form textarea {
   min-height: 70px;
 }
+
+/* Resume PDF upload */
+.upload {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+input[type="file"] {
+  padding: 8px;
+}

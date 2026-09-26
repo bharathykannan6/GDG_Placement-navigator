@@ -1,13 +1,20 @@
 // fetch wrapper: returns parsed JSON or throws an Error with a readable message.
+// `body` is sent as JSON; `file` (a File/Blob) is sent as-is with its own type.
 
-export async function api(path, { method = 'GET', body } = {}) {
+export async function api(path, { method = 'GET', body, file } = {}) {
+  let headers;
+  let payload;
+  if (file) {
+    headers = { 'Content-Type': file.type || 'application/octet-stream' };
+    payload = file;
+  } else if (body) {
+    headers = { 'Content-Type': 'application/json' };
+    payload = JSON.stringify(body);
+  }
+
   let res;
   try {
-    res = await fetch(path, {
-      method,
-      headers: body ? { 'Content-Type': 'application/json' } : undefined,
-      body: body ? JSON.stringify(body) : undefined,
-    });
+    res = await fetch(path, { method, headers, body: payload });
   } catch {
     throw new Error('Could not reach the server. Check your connection and try again.');
   }

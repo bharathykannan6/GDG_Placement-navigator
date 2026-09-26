@@ -17,7 +17,8 @@
     "@google/genai": "^2.24.0",
     "express": "^5.2.1",
     "express-rate-limit": "^8.7.0",
-    "helmet": "^8.3.0"
+    "helmet": "^8.3.0",
+    "unpdf": "^1.8.1"
   },
   "devDependencies": {
     "supertest": "^7.3.0"

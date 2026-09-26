@@ -178,6 +178,18 @@
         <div class="btn-row">
           <button class="btn" id="resume-submit" type="submit">Review my resume</button>
         </div>
+
+        <div class="field upload">
+          <label for="resume-pdf">Or upload your resume as a PDF (max 4 MB)</label>
+          <input id="resume-pdf" type="file" accept="application/pdf,.pdf" aria-describedby="resume-pdf-hint">
+          <p class="hint" id="resume-pdf-hint">
+            Text is read from the PDF on our server and contact details are removed before review.
+            Scanned PDFs without selectable text are read by Gemini directly.
+          </p>
+          <div class="btn-row">
+            <button class="btn btn-secondary" id="resume-pdf-submit" type="button">Review PDF</button>
+          </div>
+        </div>
         <p class="status" id="resume-status" role="status" aria-live="polite"></p>
       </form>
 
