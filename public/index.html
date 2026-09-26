@@ -6,28 +6,121 @@
   <title>Placement Navigator</title>
   <meta name="description" content="Find where you stand for placements, what to prepare, and how to improve.">
   <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/js/main.js"></script>
 </head>
 <body>
   <header class="site-header">
     <div class="wrap header-row">
-      <a class="brand" href="#">Placement <span>Navigator</span></a>
+      <a class="brand" href="#home">Placement <span>Navigator</span></a>
       <p class="tagline">Know where you stand. Know what to do next.</p>
     </div>
+    <nav class="nav" aria-label="Main">
+      <div class="wrap nav-row">
+        <a href="#home">Home</a>
+        <a href="#profile">Profile</a>
+      </div>
+    </nav>
   </header>
 
   <main id="main" class="wrap">
-    <section class="hero">
-      <h1>Prepare for placements with a plan made for you</h1>
+    <section data-screen="home" class="hero" aria-labelledby="home-title">
+      <h1 id="home-title">Prepare for placements with a plan made for you</h1>
       <p class="lead">
         Most students don't know what to prepare, how to prepare, where they stand, or what to improve.
         Placement Navigator answers all four.
       </p>
+      <a class="btn" href="#profile">Start with your profile</a>
       <ol class="steps">
         <li><strong>Profile</strong> Tell us your branch, target role and time available.</li>
         <li><strong>Diagnostic</strong> A 20-question check across aptitude, DSA, CS fundamentals and communication.</li>
         <li><strong>Plan</strong> A week-by-week plan built from your weakest areas.</li>
         <li><strong>Practice</strong> Resume review and mock interviews with feedback, then track your progress.</li>
       </ol>
+    </section>
+
+    <section data-screen="profile" hidden aria-labelledby="profile-title">
+      <h1 id="profile-title">Your profile</h1>
+      <p class="muted">This stays in your browser. It is used to tailor your plan and interview questions.</p>
+
+      <form id="profile-form" class="card form-grid" novalidate>
+        <div class="field">
+          <label for="p-name">Name</label>
+          <input id="p-name" name="name" autocomplete="given-name" maxlength="60" aria-describedby="p-name-err">
+          <p class="error-text" id="p-name-err" hidden></p>
+        </div>
+
+        <div class="field">
+          <label for="p-branch">Branch</label>
+          <select id="p-branch" name="branch" aria-describedby="p-branch-err">
+            <option value="">Select…</option>
+            <option>CSE</option>
+            <option>IT</option>
+            <option>AI &amp; DS</option>
+            <option>ECE</option>
+            <option>EEE</option>
+            <option>MECH</option>
+            <option>CIVIL</option>
+            <option>Other</option>
+          </select>
+          <p class="error-text" id="p-branch-err" hidden></p>
+        </div>
+
+        <div class="field">
+          <label for="p-year">Year of study</label>
+          <select id="p-year" name="year" aria-describedby="p-year-err">
+            <option value="">Select…</option>
+            <option>2nd year</option>
+            <option>3rd year</option>
+            <option>Final year</option>
+          </select>
+          <p class="error-text" id="p-year-err" hidden></p>
+        </div>
+
+        <div class="field">
+          <label for="p-role">Target role</label>
+          <input id="p-role" name="targetRole" list="role-options" maxlength="60" aria-describedby="p-role-hint p-role-err">
+          <datalist id="role-options">
+            <option value="Software Engineer">
+            <option value="Data Analyst">
+            <option value="Full Stack Developer">
+            <option value="Business Analyst">
+            <option value="Core ECE / Embedded Engineer">
+            <option value="Mechanical Design Engineer">
+          </datalist>
+          <p class="hint" id="p-role-hint">Pick a suggestion or type your own.</p>
+          <p class="error-text" id="p-role-err" hidden></p>
+        </div>
+
+        <div class="field">
+          <label for="p-company">Target company type</label>
+          <select id="p-company" name="companyType" aria-describedby="p-company-err">
+            <option value="">Select…</option>
+            <option>Service (mass recruiters)</option>
+            <option>Product</option>
+            <option>Startup</option>
+            <option>Core engineering</option>
+            <option>Not sure yet</option>
+          </select>
+          <p class="error-text" id="p-company-err" hidden></p>
+        </div>
+
+        <div class="field">
+          <label for="p-hours">Hours per week for preparation</label>
+          <input id="p-hours" name="hoursPerWeek" type="number" inputmode="numeric" min="1" max="60" aria-describedby="p-hours-err">
+          <p class="error-text" id="p-hours-err" hidden></p>
+        </div>
+
+        <div class="field">
+          <label for="p-month">Placement drives start (month)</label>
+          <input id="p-month" name="driveMonth" type="month" aria-describedby="p-month-err">
+          <p class="error-text" id="p-month-err" hidden></p>
+        </div>
+
+        <div class="field field-full">
+          <button class="btn" type="submit">Save profile</button>
+          <p class="status" id="profile-status" role="status"></p>
+        </div>
+      </form>
     </section>
   </main>
 
