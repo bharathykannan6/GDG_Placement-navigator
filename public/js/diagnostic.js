@@ -1,6 +1,7 @@
 import { api } from './api.js';
 import { h, clear } from './dom.js';
 import { load, save } from './store.js';
+import { go } from './router.js';
 
 const MAX_ATTEMPTS = 20;
 
@@ -136,22 +137,8 @@ async function submit(status) {
   const attempts = getAttempts();
   attempts.push({ date: new Date().toISOString(), ...result });
   save('attempts', attempts.slice(-MAX_ATTEMPTS));
-  renderResult(result);
-}
-
-function renderResult(result) {
-  clear(root()).append(
-    h('div', { class: 'card' },
-      h('h2', { tabindex: '-1' }, `You scored ${result.overall}%`),
-      h('p', { class: 'muted' }, `${result.correct} of ${result.total} correct.`),
-      h('ul', {},
-        Object.entries(result.byArea).map(([area, s]) => h('li', {}, `${area}: ${s.correct}/${s.total} (${s.percent}%)`)),
-      ),
-      h('div', { class: 'btn-row' },
-        h('button', { class: 'btn btn-secondary', type: 'button', onClick: renderIntro }, 'Back')),
-    ),
-  );
-  root().querySelector('h2').focus();
+  renderIntro();
+  go('standing');
 }
 
 export function render() {
