@@ -59,8 +59,7 @@ const RESPONSES = {
     improvements: ['Use a hash map'],
   },
   mentor: {
-    reply: 'Focus on Communication first.
-- Practise one HR answer today',
+    reply: 'Focus on Communication first.\n- Practise one HR answer today',
     followUps: ['One', 'Two', 'Three', 'Four is dropped'],
   },
   feedback: {
