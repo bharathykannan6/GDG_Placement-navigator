@@ -48,6 +48,7 @@ flowchart LR
 | Gemini **system instructions** | Each feature sets its own role and rules |
 | Gemini **multi-turn chat** | The AI mentor sends the conversation as `user`/`model` turns |
 | Gemini **document understanding** (PDF as `inlineData`) | Scanned resume PDFs are read by Gemini directly |
+| Gemini **model fallback** (`gemini-flash-latest` → `gemini-2.5-flash` → `gemini-flash-lite-latest`) | `src/gemini.js`: keeps the app working when a model is overloaded |
 | **Google AI Studio** | Where the `GEMINI_API_KEY` is created |
 | **Google Cloud Run**, with Cloud Build, Artifact Registry and Secret Manager | Deployment target: see [Deploy to Google Cloud Run](#deploy-to-google-cloud-run) |
 
@@ -92,7 +93,8 @@ flowchart LR
 - `helmet` security headers, including a strict Content Security Policy for pages (no inline scripts, no `eval`)
 - AI endpoints limited to 20 requests per minute per client, all API routes to 120
 - Every input validated (types, lengths, ranges, allowed values) with clear 400 messages; PDFs are checked for size (4 MB), file signature and page count (5)
-- Safe error responses: no stack traces reach the browser, and a bad key, used-up quota or wrong model name gets a message that says what to fix
+- Resilient AI calls: if Gemini is overloaded (5xx) the call is retried once, then the fallback models are tried; 429 and 404 move to the next model at once. In testing, `gemini-flash-latest` returned 503 and 429 during busy periods and `gemini-2.5-flash` answered instead
+- Safe error responses: no stack traces reach the browser, and a bad key, used-up quota, overloaded model or wrong model name gets a message that says what to fix
 - All AI and user text is inserted with `textContent` (no `innerHTML`), so it cannot inject HTML
 - Accessible:
   - labelled form fields, keyboard navigation and a skip link;
@@ -120,7 +122,8 @@ Without a key, the diagnostic, dashboard, coding test runner and progress screen
 | Variable | Required | Default | Purpose |
 |---|---|---|---|
 | `GEMINI_API_KEY` | for AI features | — | Gemini API key from Google AI Studio |
-| `GEMINI_MODEL` | no | `gemini-flash-latest` | Gemini model ID |
+| `GEMINI_MODEL` | no | `gemini-flash-latest` | Main Gemini model |
+| `GEMINI_FALLBACK_MODELS` | no | `gemini-2.5-flash,gemini-flash-lite-latest` | Tried in order when the main model is overloaded (5xx), rate-limited (429) or unavailable (404) |
 | `PORT` | no | `8080` | Port to listen on (Cloud Run sets this) |
 
 ## Tests
@@ -129,7 +132,7 @@ Without a key, the diagnostic, dashboard, coding test runner and progress screen
 npm test
 ```
 
-42 tests use Node's built-in test runner and `supertest`, with a fake Gemini model, so they need no network or key. They cover:
+46 tests use Node's built-in test runner and `supertest`, with a fake Gemini model, so they need no network or key. They cover:
 - every API route and its validation;
 - the diagnostic bank and scoring;
 - every coding test case, checked against independent reference solutions;
@@ -139,6 +142,7 @@ npm test
 - mentor context handling;
 - interview report maths;
 - rate limiting and error handling;
+- Gemini retry and model fallback;
 - the pure scoring, filler-word and progress logic.
 
 ## Deploy to Google Cloud Run

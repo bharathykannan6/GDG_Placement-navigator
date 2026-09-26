@@ -2,7 +2,7 @@ import express from 'express';
 import helmet from 'helmet';
 import { rateLimit } from 'express-rate-limit';
 import { fileURLToPath } from 'node:url';
-import { createGemini } from './gemini.js';
+import { DEFAULT_FALLBACK_MODELS, DEFAULT_MODEL, createGemini } from './gemini.js';
 import { diagnosticRouter } from './routes/diagnostic.js';
 import { planRouter } from './routes/plan.js';
 import { resumeRouter } from './routes/resume.js';
@@ -18,7 +18,12 @@ function aiFromEnv() {
     console.warn('GEMINI_API_KEY is not set: AI features will answer 503 until it is configured.');
     return null;
   }
-  return createGemini({ apiKey, model: process.env.GEMINI_MODEL || 'gemini-flash-latest' });
+  const fallbackModels = process.env.GEMINI_FALLBACK_MODELS
+    ? process.env.GEMINI_FALLBACK_MODELS.split(',').map((m) => m.trim()).filter(Boolean)
+    : DEFAULT_FALLBACK_MODELS;
+  const ai = createGemini({ apiKey, model: process.env.GEMINI_MODEL || DEFAULT_MODEL, fallbackModels });
+  console.log(`Gemini models (in order): ${ai.models.join(', ')}`);
+  return ai;
 }
 
 function limiter(limit) {

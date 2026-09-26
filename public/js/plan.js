@@ -25,7 +25,7 @@ async function generate(button, status) {
   const profile = getProfile();
   const attempt = latestAttempt();
   button.disabled = true;
-  status.textContent = 'Building your plan… this can take up to 20 seconds.';
+  status.textContent = 'Building your plan… this usually takes 5–30 seconds.';
 
   try {
     const plan = await api('/api/plan', {

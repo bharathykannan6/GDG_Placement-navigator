@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { createGemini, AiError } from '../src/gemini.js';
+import { createGemini, AiError, modelConfig } from '../src/gemini.js';
 import { weeksUntil } from '../src/routes/plan.js';
 import { redactContacts } from '../src/routes/resume.js';
 import { analyseAnswer, formatDuration } from '../public/js/speech-stats.js';
@@ -20,20 +20,105 @@ test('generateJson asks for JSON with the schema and parses the reply', async ()
 });
 
 test('generateJson turns SDK errors and bad JSON into safe AiErrors', async () => {
-  const broken = createGemini({ client: fakeClient(async () => ({ text: 'not json' })) });
+  const broken = createGemini({ log: () => {}, client: fakeClient(async () => ({ text: 'not json' })) });
   await assert.rejects(broken.generateJson({}), (err) => err instanceof AiError && err.status === 502);
 
-  const failing = createGemini({ client: fakeClient(async () => { throw new Error('key=SECRET'); }) });
+  const failing = createGemini({ log: () => {}, client: fakeClient(async () => { throw new Error('key=SECRET'); }) });
   await assert.rejects(failing.generateJson({}), (err) => err instanceof AiError && !err.message.includes('SECRET'));
 });
 
 test('SDK errors map to messages that say what to fix', async () => {
-  const failWith = (err) => createGemini({ client: fakeClient(async () => { throw err; }) }).generateJson({});
+  const failWith = (err) => createGemini({ log: () => {}, retryDelayMs: 0, client: fakeClient(async () => { throw err; }) }).generateJson({});
   const message = async (err) => { try { await failWith(err); } catch (e) { return e.message; } return null; };
   assert.match(await message(Object.assign(new Error('API key not valid. Please pass a valid API key.'), { status: 400 })), /GEMINI_API_KEY/);
   assert.match(await message(Object.assign(new Error('Resource exhausted'), { status: 429 })), /quota/);
   assert.match(await message(Object.assign(new Error('models/x is not found'), { status: 404 })), /GEMINI_MODEL/);
   assert.equal(await message(new Error('socket hang up')), 'The AI service did not respond. Please try again.');
+});
+
+test('an overloaded model is retried once, then the fallback model answers', async () => {
+  const calls = [];
+  const logs = [];
+  const overloaded = Object.assign(new Error('This model is currently experiencing high demand.'), { status: 503 });
+  const ai = createGemini({
+    model: 'primary',
+    fallbackModels: ['backup', 'last'],
+    retryDelayMs: 0,
+    log: (line) => logs.push(line),
+    client: fakeClient(async (req) => {
+      calls.push(req.model);
+      if (req.model === 'primary') throw overloaded;
+      return { text: '{"ok":true}' };
+    }),
+  });
+
+  assert.deepEqual(await ai.generateJson({ schema: {} }), { ok: true });
+  assert.deepEqual(calls, ['primary', 'primary', 'backup']);
+  assert.ok(logs.some((l) => l.includes('fallback model backup')));
+  assert.deepEqual(ai.models, ['primary', 'backup', 'last']);
+});
+
+test('missing models are skipped at once; key errors never fall back', async () => {
+  const calls = [];
+  const notFound = Object.assign(new Error('model not found'), { status: 404 });
+  const skip = createGemini({
+    model: 'gone',
+    fallbackModels: ['works'],
+    retryDelayMs: 0,
+    log: () => {},
+    client: fakeClient(async (req) => {
+      calls.push(req.model);
+      if (req.model === 'gone') throw notFound;
+      return { text: '{"n":1}' };
+    }),
+  });
+  assert.deepEqual(await skip.generateJson({ schema: {} }), { n: 1 });
+  assert.deepEqual(calls, ['gone', 'works'], '404 is not retried on the same model');
+
+  const keyCalls = [];
+  const badKey = createGemini({
+    model: 'a',
+    fallbackModels: ['b'],
+    log: () => {},
+    client: fakeClient(async (req) => {
+      keyCalls.push(req.model);
+      throw Object.assign(new Error('API key not valid.'), { status: 400 });
+    }),
+  });
+  await assert.rejects(badKey.generateJson({ schema: {} }), /GEMINI_API_KEY/);
+  assert.deepEqual(keyCalls, ['a']);
+});
+
+test('only Gemini 2.5 models get thinking turned off', async () => {
+  assert.deepEqual(modelConfig('gemini-2.5-flash'), { thinkingConfig: { thinkingBudget: 0 } });
+  assert.deepEqual(modelConfig('gemini-flash-latest'), {});
+  assert.deepEqual(modelConfig('gemini-flash-lite-latest'), {});
+
+  const seen = [];
+  const ai = createGemini({
+    model: 'gemini-flash-latest',
+    fallbackModels: ['gemini-2.5-flash'],
+    retryDelayMs: 0,
+    log: () => {},
+    client: fakeClient(async (req) => {
+      seen.push([req.model, req.config.thinkingConfig ?? null]);
+      if (req.model === 'gemini-flash-latest') throw Object.assign(new Error('not found'), { status: 404 });
+      return { text: '{}' };
+    }),
+  });
+  await ai.generateJson({ schema: {} });
+  assert.deepEqual(seen, [['gemini-flash-latest', null], ['gemini-2.5-flash', { thinkingBudget: 0 }]]);
+});
+
+test('when every model is overloaded the message says so', async () => {
+  const ai = createGemini({
+    model: 'a',
+    fallbackModels: ['b'],
+    retryDelayMs: 0,
+    log: () => {},
+    client: fakeClient(async () => { throw Object.assign(new Error('high demand'), { status: 503 }); }),
+  });
+  await assert.rejects(ai.generateJson({ schema: {} }), /overloaded right now/);
 });
 
 test('weeksUntil counts whole weeks to the 1st of the month, at least 1', () => {
