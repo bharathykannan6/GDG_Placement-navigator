@@ -629,3 +629,21 @@ blockquote {
   background: var(--surface-2);
   border-radius: 0 8px 8px 0;
 }
+
+/* Progress */
+.delta {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.delta.up { color: var(--good); }
+.delta.down { color: var(--bad); }
+.delta.same { color: var(--muted); }
+
+.delta-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+}
