@@ -1,5 +1,6 @@
 import express from 'express';
 import helmet from 'helmet';
+import { rateLimit } from 'express-rate-limit';
 import { fileURLToPath } from 'node:url';
 import { createGemini } from './gemini.js';
 import { diagnosticRouter } from './routes/diagnostic.js';
@@ -18,13 +19,27 @@ function aiFromEnv() {
   return createGemini({ apiKey, model: process.env.GEMINI_MODEL || 'gemini-flash-latest' });
 }
 
+function limiter(limit) {
+  return rateLimit({
+    windowMs: 60_000,
+    limit,
+    standardHeaders: 'draft-8',
+    legacyHeaders: false,
+    message: { error: 'Too many requests. Please wait a minute and try again.' },
+  });
+}
+
 /**
  * Builds the Express app. Pass `ai` to inject a fake model in tests,
  * or `ai: null` to simulate a server without a key.
+ * `aiRequestsPerMinute` caps AI calls per client IP (protects the API key quota).
  */
-export function createApp({ ai = aiFromEnv() } = {}) {
+export function createApp({ ai = aiFromEnv(), aiRequestsPerMinute = 20 } = {}) {
   const app = express();
 
+  // Cloud Run sits behind one Google front-end proxy; trust exactly that hop
+  // so rate limiting sees the real client IP.
+  app.set('trust proxy', 1);
   app.disable('x-powered-by');
   app.use(helmet());
   app.use(express.json({ limit: '100kb' }));
@@ -34,14 +49,33 @@ export function createApp({ ai = aiFromEnv() } = {}) {
     res.json({ status: 'ok', ai: ai ? 'configured' : 'missing' });
   });
 
+  const aiLimit = limiter(aiRequestsPerMinute);
+  app.use('/api', limiter(120));
   app.use('/api/diagnostic', diagnosticRouter());
-  app.use('/api/plan', planRouter(ai));
-  app.use('/api/resume', resumeRouter(ai));
-  app.use('/api/interview', interviewRouter(ai));
+  app.use('/api/plan', aiLimit, planRouter(ai));
+  app.use('/api/resume', aiLimit, resumeRouter(ai));
+  app.use('/api/interview', aiLimit, interviewRouter(ai));
+
+  app.use('/api', (req, res) => {
+    res.status(404).json({ error: 'Not found.' });
+  });
 
   // eslint-disable-next-line no-unused-vars
   app.use((err, req, res, next) => {
-    if (err.name === 'ValidationError' || err.name === 'AiError') {
+    if (err.type === 'entity.parse.failed') {
+      res.status(400).json({ error: 'Request body must be valid JSON.' });
+      return;
+    }
+    if (err.type === 'entity.too.large') {
+      res.status(413).json({ error: 'Request body is too large.' });
+      return;
+    }
+    if (err.name === 'ValidationError') {
+      res.status(err.status).json({ error: err.message });
+      return;
+    }
+    if (err.name === 'AiError') {
+      console.error(`AI call failed: ${err.cause?.message ?? err.message}`);
       res.status(err.status).json({ error: err.message });
       return;
     }
